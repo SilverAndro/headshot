@@ -18,7 +18,7 @@
     "headshot.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.10.3+build.211",
+    "fabricloader": ">=0.8.x",
     "fabric": "*",
     "minecraft": ">=1.16"
   }

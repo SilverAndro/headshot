@@ -14,4 +14,10 @@ public class HeadshotConfig implements ConfigData {
     
     @Comment("How long to blind when headshot in ticks (if enabled)")
     public int blindTicks = 35;
+    
+    @Comment("Whether to apply nausea when headshot or not")
+    public boolean doNausea = false;
+    
+    @Comment("How long to nausea when headshot in ticks (if enabled)")
+    public int nauseaTicks = 35;
 }

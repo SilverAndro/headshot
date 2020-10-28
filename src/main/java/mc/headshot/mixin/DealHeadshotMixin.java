@@ -33,6 +33,9 @@ public class DealHeadshotMixin {
                 if (headshotConfig.doBlind) {
                     pe.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, headshotConfig.blindTicks, 3));
                 }
+                if (headshotConfig.doNausea) {
+                    pe.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, headshotConfig.nauseaTicks, 2));
+                }
                 return;
             }
         }

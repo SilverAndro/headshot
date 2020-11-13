@@ -4,6 +4,7 @@
   "package": "mc.headshot.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "BlockedByShieldInvoker",
     "DealHeadshotMixin"
   ],
   "client": [

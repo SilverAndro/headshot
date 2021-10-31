@@ -11,39 +11,45 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
 public class DealHeadshotMixin {
-    private static boolean ignore = false;
+    // Used to prevent StackOverflows from recursive, infinite damage
+    @Unique
+    private static boolean ignoreDamageHeadshot = false;
     
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/damage/DamageSource;getAttacker()Lnet/minecraft/entity/Entity;"), method = "damage")
     void dealExtraHeadshotDamageIfApplicable(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         HeadshotConfig headshotConfig = Headshot.config;
+        
+        // Make sure the shield didn't block anything
         //noinspection ConstantConditions
         if ((Object)this instanceof ServerPlayerEntity && !((BlockedByShieldInvoker)this).invokeBlockedByShield(source)) {
-            if (!ignore && source instanceof ProjectileDamageSource && source.getSource() != null) {
-                PlayerEntity pe = (PlayerEntity)(Object)this;
-                double playerHeadStart = pe.getPos().add(0.0, pe.getDimensions(pe.getPose()).height * 0.85F, 0.0).y - 0.17;
-                if (source.getSource().getPos().y > playerHeadStart) {
+            if (!ignoreDamageHeadshot && source instanceof ProjectileDamageSource && source.getSource() != null) {
+                ServerPlayerEntity pe = (ServerPlayerEntity)(Object)this;
+                if (Headshot.calculateIsHeadHit(source.getSource().getPos(), pe)) {
                     pe.sendMessage(new LiteralText("You got headshot!"), true);
                     if (source.getAttacker() instanceof PlayerEntity) {
-                        ((PlayerEntity)source.getAttacker()).sendMessage(new LiteralText("Headshot!"), true);
+                        ((PlayerEntity)source.getAttacker()).sendMessage(new LiteralText("Headshot " + pe.getEntityName() + "!"), true);
                     }
-                    ignore = true;
+                    ignoreDamageHeadshot = true;
                     pe.damage(source, (float)(amount * headshotConfig.damageMultiplier));
+                    
                     if (headshotConfig.doBlind) {
                         pe.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, headshotConfig.blindTicks, 3));
                     }
                     if (headshotConfig.doNausea) {
                         pe.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, headshotConfig.nauseaTicks, 2));
                     }
+                    
                     return;
                 }
             }
-            ignore = false;
+            ignoreDamageHeadshot = false;
         }
     }
 }

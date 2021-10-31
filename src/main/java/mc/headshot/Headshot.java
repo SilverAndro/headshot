@@ -1,12 +1,13 @@
 package mc.headshot;
 
-import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
-import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
+import mc.microconfig.MicroConfig;
 import net.fabricmc.api.ModInitializer;
 
 public class Headshot implements ModInitializer {
+    public static HeadshotConfig config;
+    
     @Override
     public void onInitialize() {
-        AutoConfig.register(HeadshotConfig.class, JanksonConfigSerializer::new);
+        config = MicroConfig.getOrCreate("headshot", new HeadshotConfig());
     }
 }

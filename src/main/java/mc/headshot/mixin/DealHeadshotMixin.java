@@ -1,8 +1,7 @@
 package mc.headshot.mixin;
 
-import jdk.nashorn.internal.ir.Block;
+import mc.headshot.Headshot;
 import mc.headshot.HeadshotConfig;
-import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.ProjectileDamageSource;
@@ -12,7 +11,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -23,7 +21,7 @@ public class DealHeadshotMixin {
     
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/damage/DamageSource;getAttacker()Lnet/minecraft/entity/Entity;"), method = "damage")
     void dealExtraHeadshotDamageIfApplicable(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        HeadshotConfig headshotConfig = AutoConfig.getConfigHolder(HeadshotConfig.class).getConfig();
+        HeadshotConfig headshotConfig = Headshot.config;
         //noinspection ConstantConditions
         if ((Object)this instanceof ServerPlayerEntity && !((BlockedByShieldInvoker)this).invokeBlockedByShield(source)) {
             if (!ignore && source instanceof ProjectileDamageSource && source.getSource() != null) {

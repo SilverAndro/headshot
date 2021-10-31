@@ -1,10 +1,8 @@
 package mc.headshot;
 
-import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
-import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.Comment;
+import mc.microconfig.Comment;
+import mc.microconfig.ConfigData;
 
-@Config(name = "headshot")
 public class HeadshotConfig implements ConfigData {
     @Comment("Damage multiplier done on headshots")
     public double damageMultiplier = 0.05;

@@ -41,17 +41,6 @@ public class Headshot implements ModInitializer {
         
         double headX = Math.sin(Math.toRadians(-player.yaw)) * lengthMod;
         double headZ = Math.cos(Math.toRadians(-player.yaw)) * lengthMod;
-        ((ServerWorld)player.world).spawnParticles(
-            ParticleTypes.BARRIER,
-            player.getPos().x + headX,
-            player.getPos().y + headY,
-            player.getPos().z + headZ,
-            1,
-            0.0,
-            0.0,
-            0.0,
-            0.0
-        );
         return sourcePos.isInRange(player.getPos().add(headX, headY / 2, headZ), 0.4);
     }
 }
